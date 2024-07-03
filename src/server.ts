@@ -12,6 +12,7 @@ import { FileStorageUploadResponse } from './types.js';
 import { uploadMulter } from './uploadResume.js';
 
 const PROMPT_SRC = `${process.cwd()}/src/PROMPT.md`;
+export const maxDuration = 60; // This function can run for a maximum of 5 seconds
 
 const { fileStorageApiURL, openAiApiKey, openAiBaseURL, port } = enviroments;
 
