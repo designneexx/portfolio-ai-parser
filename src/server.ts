@@ -132,7 +132,7 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
 
     res.json({ ...data, avatarPath, resumeUrl });
   } catch (error) {
-    console.log('error', error);
+    console.log('error', error?.response?.data);
     res.status(400).json({ error: error.message });
   }
 });
