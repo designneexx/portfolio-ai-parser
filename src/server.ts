@@ -42,7 +42,6 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
         ...formData.getHeaders()
       }
     });
-    console.log(response.data);
     const { data: storageData } = response;
     const { imagesList, resumeUrl, text } = storageData;
 
@@ -66,7 +65,7 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
               role: 'user'
             }
           ],
-          model: 'gpt-4-vision-preview',
+          model: 'gpt-4.1',
           response_format: {
             type: 'text'
           }
