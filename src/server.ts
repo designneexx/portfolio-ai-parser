@@ -65,7 +65,7 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
               role: 'user'
             }
           ],
-          model: 'gpt-4.1',
+          model: 'gpt-4-vision-preview',
           response_format: {
             type: 'text'
           }
@@ -133,7 +133,7 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
     res.json({ ...data, avatarPath, resumeUrl });
   } catch (error) {
     console.log('error', error?.response?.data);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ data: JSON.stringify(error), error: error.message });
   }
 });
 
