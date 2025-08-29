@@ -82,25 +82,31 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
     console.log({ analysisHumanPhotoPromises });
     let avatarPath = '';
 
-    for (const item of analysisHumanPhoto) {
-      if (item.status !== 'fulfilled') continue;
+    try {
+      for (const item of analysisHumanPhoto) {
+        if (item.status !== 'fulfilled') continue;
 
-      const { data, url } = item.value;
+        const { data, url } = item.value;
 
-      const [firstImageChoice] = data.choices;
-      const content = firstImageChoice?.message?.content || '';
-      const parsedContent = content.trim().toUpperCase();
+        const [firstImageChoice] = data.choices;
+        const content = firstImageChoice?.message?.content || '';
+        const parsedContent = content.trim().toUpperCase();
 
-      console.log(content);
+        console.log(content);
 
-      if (parsedContent !== TRUE_STRING) continue;
+        if (parsedContent !== TRUE_STRING) continue;
 
-      avatarPath = url;
+        avatarPath = url;
+      }
+    } catch (err) {
+      console.log({ err });
     }
 
     console.log(avatarPath);
 
     const systemPrompt = await getPrompt(PROMPT_SRC);
+
+    console.log({ systemPrompt });
 
     const completion = await openai.chat.completions.create({
       messages: [
@@ -118,6 +124,8 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
 
     const portfolioData = completion.choices[0]?.message.content;
 
+    console.log({ portfolioData });
+
     if (!portfolioData) {
       throw new Error(
         'Отсуствуют данные для генерации портфолио. Возможно, ваш файл не соответсвует резюме'
@@ -125,15 +133,21 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
     }
 
     const portfolioParsed = JSON.parse(portfolioData);
+    console.log({ portfolioParsed });
     const data = getPortfolio(portfolioParsed);
+    console.log({ data });
 
     const { success } = resumeSchema.safeParse(data.portfolio);
+
+    console.log({ success });
 
     if (!success) {
       throw new Error(
         'Ошибка при валидации схемы данных. Возможно, ваш файл не соответсвует резюме'
       );
     }
+
+    console.log({ avatarPath, data, resumeUrl });
 
     res.json({ ...data, avatarPath, resumeUrl });
   } catch (error) {
