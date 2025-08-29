@@ -141,11 +141,11 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
 
     console.log({ success });
 
-    if (!success) {
-      throw new Error(
-        'Ошибка при валидации схемы данных. Возможно, ваш файл не соответсвует резюме'
-      );
-    }
+    // if (!success) {
+    //   throw new Error(
+    //     'Ошибка при валидации схемы данных. Возможно, ваш файл не соответсвует резюме'
+    //   );
+    // }
 
     console.log({ avatarPath, data, resumeUrl });
 
