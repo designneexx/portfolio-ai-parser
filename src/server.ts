@@ -45,6 +45,8 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
     const { data: storageData } = response;
     const { imagesList, resumeUrl, text } = storageData;
 
+    console.log({ storageData });
+
     const analysisHumanPhotoPromises = imagesList.map((url) =>
       openai.chat.completions
         .create({
@@ -77,6 +79,7 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
     );
 
     const analysisHumanPhoto = await Promise.allSettled(analysisHumanPhotoPromises);
+    console.log({ analysisHumanPhotoPromises });
     let avatarPath = '';
 
     for (const item of analysisHumanPhoto) {
@@ -110,6 +113,8 @@ app.post('/generate-portfolio', uploadMulter.single(RESUME_FIELD_NAME), async (r
       },
       temperature: 0
     });
+
+    console.log({ completion });
 
     const portfolioData = completion.choices[0]?.message.content;
 
